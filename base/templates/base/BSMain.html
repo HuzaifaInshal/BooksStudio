@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOokStudio</title>
+    <link rel="stylesheet" href="{% static 'styles/BSMain.css' %}">
+    <script src="https://unpkg.com/@ungap/custom-elements-builtin"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
+	<script src="{% static 'javascript/x-frame-bypass.js' %}" type="module"></script>
+</head>
+<body>
+    <div
+    data-collapse="medium"
+    data-animation="default"
+    data-duration="400"
+    data-easing="ease"
+    data-easing2="ease"
+    role="banner"
+    class="navbar w-nav">
+    <div class="w-container">
+            <a
+                href="{% url 'land' %}"
+                aria-current="page"
+                class="brand w-clearfix w-nav-brand w--current"
+                ><img
+                src="{% static 'assets/Books Studio Logo.svg' %}"
+                width="20"
+                alt=""
+                class="stone-logo"
+                style="height: 40px; width: 40px;"/>
+                <div class="logo-text">BOOKS STUDIO</div></a>
+        <nav role="navigation" class="nav-menu w-nav-menu">
+            
+            </nav>        
+      <nav role="navigation" class="nav-menu w-nav-menu">
+        <a onclick="closeNav1();openNav2()" aria-current="page" class="nav-link w-nav-link "
+        >Books panel</a>
+        <a  onclick="closeNav2();openNav1()" aria-current="page" class="nav-link w-nav-link "
+          >pdfdrive panel</a>
+        <a href="{% url 'logout' %}" aria-current="page" class="nav-link w-nav-link "
+        >Logout</a>
+      </nav>
+      <div class="menu-button w-nav-button">
+        <div class="menu-icon w-icon-nav-menu"></div>
+      </div>
+    </div>
+  </div>
+  
+
+
+
+
+
+
+
+
+  <!-- BOOKS TAB -->
+  <div id="myNav1" class="overlay1">
+    
+    <div class="overlay1-content">
+      
+      <div class="body1">
+        <div class="wrapper1">
+          <div class="hidelogo1">
+            <a href="javascript:void(0)" class="closebtn1" onclick="closeNav1()">&times;</a>
+            <input type="text1" id="textone" class="field1 w-input1" placeholder="Search a book"/>
+              <button class="button beige footer" onclick="testVariable()">Search</button> 
+          </div>
+        <iframe id="showskill" is="x-frame-bypass" src="http://www.pdfdrive.com/"></iframe>
+        </div>
+        </div>
+    </div>
+  </div>
+
+
+
+  <div id="myNav2" class="overlay2">
+    
+    <div class="overlay2-content" style=" padding: 10%; gap: 50px;">
+    <a href="javascript:void(0)" class="closebtn2" onclick="closeNav2()">&times;</a>
+    <div style="display: flex; flex-direction: column; border-right: solid 3px white; padding: 25px;">
+     <h4 style="color: white;">Upload your Books</h4> 
+    <form action="" method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column;">
+        {% csrf_token %}
+        <!-- {{form.as_p}} -->
+        <input type="text" name="bookname" class="field w-input" placeholder="bookname">
+        <input type="file" name="pdf" accept=".pdf,.doc,.docx" class="field w-input">
+        <button type="submit" value="book-upload" name="submit" class="button form w-button">Upload</button>
+    </form>
+    </div>
+    <div>
+      <div style="display: flex; flex-direction: row; gap: 10px;">
+      <a href="{% url 'main' request.user.id %}" class="button form w-button" style="font-size: large;">Showall</a>
+      <a href="{% url 'main' request.user.id %}?q={{request.user.id}}" class="button form w-button"style="font-size: large;">Show mine only</a>
+      </div>
+      <div style="display: flex; flex-direction: column;">
+      {% for i in abc %}
+      <a href="{{i.pdf.url}}" target="_blank" style="border: solid 1px white;">
+      <h3 >{{i.bookname}}</h3>
+      <h4>Upload by {{i.user}}</h4>
+      </a>
+      {% endfor %}
+    </div>
+    </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+  <!-- MUSIC TAB -->
+  <h1 style="color: white; margin-left: 10%; padding-top: 20px;">Welcome {{request.user}}</h1>
+  <div class="containerrr">
+    <div class="tabs">
+
+
+
+      <div class="tabby-tab">
+        <input type="radio" id="tab-1" name="tabby-tabs" checked onclick="tolocal()">
+        <label for="tab-1">SAVED SONGS</label>
+        <div class="tabby-content" >
+        <h4>Listen to your favourites from local playlist by adding it to the player</h4>
+        <div  class="flexdir">
+          <div>
+            <form action="" method="POST" enctype="multipart/form-data" class="contact-form-column w-col w-col-8" style="display: flex; flex-direction: column; border-right: solid 3px black;">
+              {% csrf_token %}
+              <h4>Upload your music</h4>
+              <input type="text" name="musicname" class="field w-input" placeholder="enter music name">
+              <input type="file" name="musicpath" class="field w-input">
+              <button type="submit" value="music-upload" name="submit" class="button form w-button">Upload</button>
+            </form>
+          </div>
+          <div style="padding-top: 80px; display: flex; flex-direction: column;">
+            <audio id="sourced" controls autoplay src="/files/music/Marshmello_Khalid_-_Numb_Lyrics.mp3"></audio>
+            <div style="display: flex; flex-direction: row; gap: 20px; padding: 10px; border: solid 1px black; margin-top: 20px;">
+            <a href="{% url 'main' request.user.id %}" class="button form w-button">Showall</a>
+            <a href="{% url 'main' request.user.id %}?p={{request.user.id}}" class="button form w-button">Show mine only</a>
+            </div>
+            <div style="display: flex; flex-direction: column; height: 50vh; overflow: auto;"> 
+              <div>
+            {% for i in mzk %} 
+            <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 5px;  border: solid 1px black; padding: 5px;">
+            <button value="{{i.musicpath.url}}" style="background: none; border: none; padding: 0; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: large; font-weight: bold;">{{i.musicname}}<p style="font-size: medium;">uploaded by {{i.user}}</p></button>
+            
+            </div>
+            {% endfor %}
+          </div>
+            
+            </div>
+          </div>
+          
+        </div>
+        </div></div>
+
+
+<!-- ##################################################################################### -->
+      <div class="tabby-tab">
+        <input type="radio" id="tab-2" name="tabby-tabs" onclick="toyt()">
+        <label for="tab-2">FROM YOUTUBE</label>
+        <div class="tabby-content">
+        <h4>Listen from YouTube</h4>
+        <div class="section1">
+          <form id="yt-form" class="contact-form-column w-col w-col-8">
+              <p><input type="text" class="field w-input" id="keyword-input" placeholder="Enter keyword" required></p>
+              <p><input type="number" class="field w-input" id="maxresult-input" placeholder="how much bw 1 to 50" min="1" max="50" required></p>
+              <p>
+                  <select id="order-input" class="field w-input" required>
+                      <option value="">--SELECT ORDER--</option>
+                      <option value="date">Date</option>
+                      <option value="rating">Rating</option>
+                      <option value="relevance">Relevance</option>
+                      <option value="title">Title</option>
+                      <option value="viewCount" selected>View Count</option>
+                  </select>
+              </p>
+              <p>
+                  <input type="submit" value="Submit"class="button form w-button">
+              </p>
+          </form>
+         
+          <div class="ytholders" id="videoListContainer"></div>
+          <div class="ytholders2" id="container"></div>
+      </div>
+  
+      <div class="section12">
+          <div class="ifr" id="ifr"></div>
+      </div>
+  
+        </div>
+      </div>
+  
+      
+      
+    </div>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <audio src="https://shu-vro.github.io/Audio-App---Musika/resources/audio/userScore.mp3"></audio>
+
+  <script src="https://apis.google.com/js/api.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+       $("button").click(function() {
+    var fired_button = $(this).val();
+    xyz = document.getElementById('sourced')
+    xyz.src=fired_button
+
+});
+</script>
+  <script src="{% static 'javascript/BSMain.js' %}"></script>
+
+
+</body>
+</html>
